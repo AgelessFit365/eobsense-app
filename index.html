@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EOBSense Bill Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>EOBSense</h1>
+            <p class="tagline">Understand your medical bill in plain English</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Input Mode Toggle -->
+            <div class="mode-toggle">
+                <button id="uploadModeBtn" class="mode-btn active">Upload a File</button>
+                <button id="pasteModeBtn" class="mode-btn">Paste Text</button>
+            </div>
+
+            <!-- Upload Zone -->
+            <section id="uploadMode" class="input-section active">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">📄</div>
+                    <h2>Drop your bill or EOB here</h2>
+                    <p>Or click to select a file</p>
+                    <p class="file-types">PDF, JPG, or PNG</p>
+                    <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" hidden>
+                </div>
+            </section>
+
+            <!-- Paste Zone -->
+            <section id="pasteMode" class="input-section">
+                <div class="paste-container">
+                    <h2>Paste your bill or EOB</h2>
+                    <textarea
+                        id="pasteInput"
+                        placeholder="Copy and paste the text of your medical bill or EOB here. Include all charges, payments, and dates."
+                        rows="12"
+                    ></textarea>
+                </div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="submit-area">
+                <button id="submitBtn" class="submit-button">Analyze Bill</button>
+                <p id="fileNameDisplay" class="file-name"></p>
+            </div>
+
+            <!-- Output Panel -->
+            <section id="outputPanel" class="output-panel hidden">
+                <button id="closeOutput" class="close-btn">&times;</button>
+                <div id="outputContent"></div>
+            </section>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Analyzing your bill...</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p><strong>Disclaimer:</strong> EOBSense is a translation tool only. It does not provide medical or legal advice. Always verify charges with your provider or insurer.</p>
+        <p>Questions? Visit <a href="https://eobsense.com">eobsense.com</a></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
