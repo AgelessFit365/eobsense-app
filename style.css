@@ -29,10 +29,19 @@ header {
 }
 
 .header-content h1 {
+    font-family: 'Playfair Display', serif;
     font-size: 2.5rem;
-    font-weight: normal;
+    font-weight: 700;
     margin-bottom: 0.5rem;
     letter-spacing: 1px;
+}
+
+.header-content h1 .eob {
+    color: white;
+}
+
+.header-content h1 .sense {
+    color: #1CB3C4;
 }
 
 .tagline {
