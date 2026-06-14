@@ -183,16 +183,7 @@ function getMimeType(fileType) {
     return mimeMap[fileType] || 'application/octet-stream';
 }
 
-// Format Claude's response for display
+// Format Claude's response for display using marked.js
 function formatOutput(text) {
-    const formatted = text
-        .replace(/^# /gm, '<h2>')
-        .replace(/\n\n/g, '</h2><p>')
-        .replace(/^## /gm, '<h3>')
-        .replace(/\n/g, '</p><p>')
-        .replace(/<\/h2><p>/g, '</h2>')
-        .replace(/<\/h3><p>/g, '</h3>')
-        .replace(/<p><\/p>/g, '')
-        .concat('</p>');
-    return `<div>${formatted}</div>`;
+    return marked.parse(text);
 }
