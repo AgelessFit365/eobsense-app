@@ -71,8 +71,8 @@ uploadZone.addEventListener('drop', (e) => {
     }
 });
 
-// Submit button (placeholder for API integration)
-submitBtn.addEventListener('click', () => {
+// Submit button
+submitBtn.addEventListener('click', async () => {
     const uploadModeActive = uploadMode.classList.contains('active');
     const content = uploadModeActive ? selectedFile : pasteInput.value;
 
@@ -81,8 +81,56 @@ submitBtn.addEventListener('click', () => {
         return;
     }
 
-    // API call will be added in the next task
-    console.log('Submit clicked. Content ready for analysis:', content);
+    try {
+        setLoading(true);
+
+        let requestBody;
+        if (uploadModeActive) {
+            // File upload: convert to base64
+            const fileContent = await readFileAsBase64(selectedFile);
+            const mediaType = getMimeType(selectedFile.type);
+            requestBody = JSON.stringify({
+                content: [
+                    {
+                        type: 'image',
+                        source: {
+                            type: 'base64',
+                            media_type: mediaType,
+                            data: fileContent,
+                        },
+                    },
+                ],
+                type: 'file',
+            });
+        } else {
+            // Text paste
+            requestBody = JSON.stringify({
+                content: pasteInput.value,
+                type: 'text',
+            });
+        }
+
+        const response = await fetch('/.netlify/functions/analyze', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: requestBody,
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to analyze bill');
+        }
+
+        const result = await response.json();
+        displayOutput(formatOutput(result.analysis));
+    } catch (error) {
+        console.error('Error:', error);
+        displayOutput(`<p style="color: #d32f2f;"><strong>Error:</strong> ${error.message}</p>`);
+    } finally {
+        setLoading(false);
+    }
 });
 
 // Close output panel
@@ -107,4 +155,44 @@ function setLoading(isLoading) {
         loading.classList.add('hidden');
         submitBtn.disabled = false;
     }
+}
+
+// Convert file to base64
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64String = reader.result.split(',')[1];
+            resolve(base64String);
+        };
+        reader.onerror = (error) => {
+            reject(error);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// Get MIME type for Claude API
+function getMimeType(fileType) {
+    const mimeMap = {
+        'application/pdf': 'application/pdf',
+        'image/jpeg': 'image/jpeg',
+        'image/png': 'image/png',
+        'image/jpg': 'image/jpeg',
+    };
+    return mimeMap[fileType] || 'application/octet-stream';
+}
+
+// Format Claude's response for display
+function formatOutput(text) {
+    const formatted = text
+        .replace(/^# /gm, '<h2>')
+        .replace(/\n\n/g, '</h2><p>')
+        .replace(/^## /gm, '<h3>')
+        .replace(/\n/g, '</p><p>')
+        .replace(/<\/h2><p>/g, '</h2>')
+        .replace(/<\/h3><p>/g, '</h3>')
+        .replace(/<p><\/p>/g, '')
+        .concat('</p>');
+    return `<div>${formatted}</div>`;
 }

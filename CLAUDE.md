@@ -41,7 +41,9 @@ Read this at the start of every session before touching any code.
 - Navy: `#005691` (primary / headings)
 - Teal: `#1CB3C4` (accent / buttons / highlights)
 - Charcoal: `#333333` (body text)
-- Font: Georgia, serif everywhere
+- **Typography:**
+  - Header wordmark ("EOBSense™"): Merriweather Bold (Google Fonts)
+  - All body text, buttons, UI elements: Georgia, serif
 - Tone: Calm, plain English, trustworthy — like a knowledgeable neighbor
 - Audience: 55+ patients, Medicare enrollees, family caregivers — not tech-savvy
 
